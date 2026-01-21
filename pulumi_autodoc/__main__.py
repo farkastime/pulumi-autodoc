@@ -17,6 +17,7 @@ def parse_env() -> dict:
     local_pulumi_dir = os.getenv("LOCAL_PULUMI_DIR", "data/.pulumi")
     local_summary_dir = os.getenv("LOCAL_SUMMARY_DIR", "data/output")
     overwrite_pulumi_dir = os.getenv("OVERWRITE_PULUMI_DIR", "false").lower() == "true"
+    overwrite_summaries = os.getenv("OVERWRITE_SUMMARIES", "false").lower() == "true"
     return {
         "api_key": api_key,
         "endpoint": endpoint,
@@ -24,6 +25,7 @@ def parse_env() -> dict:
         "local_pulumi_dir": Path(local_pulumi_dir),
         "local_summary_dir": Path(local_summary_dir),
         "overwrite_pulumi_dir": overwrite_pulumi_dir,
+        "overwrite_summaries": overwrite_summaries,
     }
 
 
