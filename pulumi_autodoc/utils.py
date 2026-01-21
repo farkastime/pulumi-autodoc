@@ -1,26 +1,7 @@
-import requests
 from pathlib import Path
 from typing import Tuple
 
 import boto3
-
-
-def get_gemini_summary(prompt, api_key, endpoint):
-    headers = {
-        "Content-Type": "application/json",
-        "x-goog-api-key": api_key,
-    }
-    data = {"contents": [{"parts": [{"text": prompt}]}]}
-    response = requests.post(endpoint, headers=headers, json=data)
-    response.raise_for_status()
-    result = response.json()
-    summary = result["candidates"][0]["content"]["parts"][0]["text"]
-    return summary
-
-
-def engineer_prompt(stack_json) -> str:
-    preamble = "Summarize the following Pulumi stack JSON in Markdown format"
-    return f"{preamble}:\n\n{stack_json}\n\n"
 
 
 def parse_s3_path(s3_path: str) -> Tuple[str, str]:
@@ -42,3 +23,13 @@ def sync_s3_directory(bucket, prefix, local_dir):
             local_path = local_dir / rel_path
             local_path.parent.mkdir(parents=True, exist_ok=True)
             s3.download_file(bucket, s3_key, str(local_path))
+
+
+def combine_md_files(root_dir, output_file):
+    root = Path(root_dir)
+    with open(output_file, "w", encoding="utf-8") as outfile:
+        for md_file in sorted(root.rglob("*.md")):
+            with open(md_file, "r", encoding="utf-8") as infile:
+                outfile.write(f"# {md_file.relative_to(root)}\n\n")
+                outfile.write(infile.read())
+                outfile.write("\n\n")

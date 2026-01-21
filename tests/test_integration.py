@@ -2,7 +2,7 @@ import json
 import os
 from pathlib import Path
 import pytest
-from pulumi_autodoc.utils import engineer_prompt, get_gemini_summary
+from pulumi_autodoc.gemini import engineer_prompt, get_gemini_summary
 
 
 @pytest.fixture
